@@ -6,10 +6,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {
+        "http://localhost:3000",
+        "https://swami-swad-frontend.vercel.app"
+})
 @RestController
 @RequestMapping("/api/contact")
-//@CrossOrigin(origins = "*")
 public class ContactController {
 
     private final ContactRepository contactRepository;
@@ -22,7 +24,6 @@ public class ContactController {
     public Contact saveContact(@RequestBody Contact contact) {
         return contactRepository.save(contact);
     }
-
 
     @GetMapping
     public List<Contact> getAllContacts() {
@@ -37,7 +38,6 @@ public class ContactController {
 
     @PutMapping("/{id}")
     public Contact updateContact(@PathVariable Long id, @RequestBody Contact updatedContact) {
-
         Contact existingContact = contactRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Contact not found"));
 
@@ -47,7 +47,4 @@ public class ContactController {
 
         return contactRepository.save(existingContact);
     }
-
-
-
 }
