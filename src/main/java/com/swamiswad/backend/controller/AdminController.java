@@ -1,29 +1,33 @@
 package com.swamiswad.backend.controller;
 
-import com.swamiswad.backend.model.LoginRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
+@CrossOrigin(origins = {
+        "http://localhost:3000",
+        "https://swami-swad-frontend.vercel.app"
+})
 @RestController
 @RequestMapping("/admin")
-@CrossOrigin(origins = "*") // temporary, we tighten later
 public class AdminController {
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
+        String username = credentials.get("username");
+        String password = credentials.get("password");
 
-        String adminUsername = "admin";
-        String adminPassword = "1234"; // change later
-
-        if (request.getUsername().equals(adminUsername) &&
-                request.getPassword().equals(adminPassword)) {
-
-            return ResponseEntity.ok("Login successful");
+        // Simple password check
+        if ("admin".equals(username) && "admin123".equals(password)) {
+            return ResponseEntity.ok(Map.of(
+                    "status", "success",
+                    "message", "Login successful"
+            ));
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body("Invalid credentials");
+                .body(Map.of("status", "error", "message", "Invalid credentials"));
     }
 }
-
